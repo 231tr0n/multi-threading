@@ -22,7 +22,7 @@ func init() {
 	log.SetFlags(0)
 	log.SetPrefix("")
 
-	url = *flag.String("host", "http://localhost:8080", "Host to request")
+	url = *flag.String("host", "", "Host to request")
 	requests = *flag.Int("requests", 48, "Number of requests")
 	debug = *flag.Bool("debug", false, "Set logger level to debug")
 	flag.Parse()
