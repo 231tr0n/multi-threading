@@ -27,11 +27,11 @@ build:
 
 .PHONY: go-rate-limit-test
 go-rate-limit-test:
-	go run utils/rateLimit.go http://localhost:8080 $(requests)
+	go run utils/rateLimit.go -debug -host=http://localhost:8080 -requests=$(requests)
 
 .PHONY: java-rate-limit-test
 java-rate-limit-test:
-	go run utils/rateLimit.go http://localhost:8081 $(requests)
+	go run utils/rateLimit.go -debug -host=http://localhost:8081 -requests=$(requests)
 
 .PHONY: clean
 clean:
