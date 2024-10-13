@@ -23,7 +23,7 @@ func init() {
 	log.SetPrefix("")
 
 	url = flag.String("host", "", "Host to request")
-	requests = flag.Int("requests", 48, "Number of requests")
+	requests = flag.Int("requests", 47, "Number of requests")
 	debug = flag.Bool("debug", false, "Set logger level to debug")
 	flag.Parse()
 
