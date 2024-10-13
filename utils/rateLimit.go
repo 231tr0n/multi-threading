@@ -75,7 +75,5 @@ func main() {
 
 	wg.Wait()
 
-	duration := int(time.Since(startTime).Round(time.Nanosecond))
-	requestsPerSecond := int(*requests / duration)
-	slog.Info("Completed", "duration", duration, "rps", requestsPerSecond)
+	slog.Info("Completed", "duration", time.Since(startTime).Round(time.Nanosecond))
 }
