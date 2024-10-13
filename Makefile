@@ -1,5 +1,7 @@
 SHELL=/bin/bash
 
+requests=48
+
 .PHONY: docker-build
 docker-build:
 	$(MAKE) clean
@@ -24,9 +26,12 @@ build:
 	cd ./java ; mvn clean install
 
 .PHONY: go-rate-limit-test
-rate-limit-test:
-	time go run utils/rateLimit.go http://localhost:8080 48
-	time go run utils/rateLimit.go http://localhost:8081 48
+go-rate-limit-test:
+	time go run utils/rateLimit.go http://localhost:8080 $(requests)
+
+.PHONY: java-rate-limit-test
+java-rate-limit-test:
+	time go run utils/rateLimit.go http://localhost:8081 $(requests)
 
 .PHONY: clean
 clean:
