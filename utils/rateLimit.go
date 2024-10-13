@@ -18,7 +18,7 @@ func init() {
 	log.SetFlags(0)
 	log.SetPrefix("INFO: ")
 
-	if len(os.Args) != 4 {
+	if len(os.Args) != 3 {
 		log.Fatalln("Provide the right arguments in order: website-url, requests")
 	}
 
@@ -31,19 +31,19 @@ func init() {
 }
 
 func worker(requestsChan <-chan int) {
-	for id := range requestsChan {
+	for n := range requestsChan {
 		startTime := time.Now()
-		res, err := http.Get(url + "?n=" + strconv.Itoa(id))
+		res, err := http.Get(url + "?n=" + strconv.Itoa(n))
 		if err != nil {
-			log.Println("REQ", id, err)
+			log.Println("REQ", n, err)
 			continue
 		}
 		body, err := io.ReadAll(res.Body)
 		if err != nil {
-			log.Println("REQ", id, err)
+			log.Println("REQ", n, err)
 			continue
 		}
-		log.Println("REQ", id, time.Since(startTime).Round(time.Second), strings.TrimSpace(string(body)))
+		log.Println("REQ", n, time.Since(startTime).Round(time.Second), strings.TrimSpace(string(body)))
 	}
 }
 
