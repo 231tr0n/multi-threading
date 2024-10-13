@@ -55,7 +55,7 @@ class App {
                 Long.toString(App.compute(Integer.parseInt(query.split("=")[1]))).getBytes("UTF-8");
             exchange.sendResponseHeaders(400, response.length);
             out.write(response);
-          } catch (URISyntaxException e) {
+          } catch (URISyntaxException | NumberFormatException e) {
             byte[] response = "Wrong parameter 'n'".getBytes("UTF-8");
             exchange.sendResponseHeaders(400, response.length);
             out.write(response);
