@@ -46,15 +46,15 @@ func worker(wg *sync.WaitGroup, requestsChan <-chan int) {
 		startTime := time.Now()
 		res, err := http.Get(*url + "?n=" + strconv.Itoa(n))
 		if err != nil {
-			slog.Debug("REQ", "n", n, "err", err)
+			slog.Debug("Request", "n", n, "err", err)
 			continue
 		}
 		body, err := io.ReadAll(res.Body)
 		if err != nil {
-			slog.Debug("REQ", "n", n, "err", err)
+			slog.Debug("Request", "n", n, "err", err)
 			continue
 		}
-		slog.Debug("REQ", "n", n, "time", time.Since(startTime).Round(time.Nanosecond), "ans", strings.TrimSpace(string(body)))
+		slog.Debug("Request", "n", n, "time", time.Since(startTime).Round(time.Nanosecond), "ans", strings.TrimSpace(string(body)))
 	}
 	wg.Done()
 }
@@ -77,5 +77,5 @@ func main() {
 
 	duration := int(time.Since(startTime).Round(time.Nanosecond))
 	requestsPerSecond := int(*requests / duration)
-	slog.Info("COMPLETED", "duration", duration, "rps", requestsPerSecond)
+	slog.Info("Completed", "duration", duration, "rps", requestsPerSecond)
 }
