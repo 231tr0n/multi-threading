@@ -9,16 +9,24 @@ docker-build:
 	cd ./go ; docker build -t trial-go .
 	cd ./java ; docker build -t trial-java .
 
+.PHONY: compose-up
+compose-up:
+	docker compose up -d
+
+.PHONY: compose-down
+compose-up:
+	docker compose down
+
 .PHONY: build
 build:
 	$(MAKE) clean
 	cd ./go ; go mod tidy ; go build -v .
 	cd ./java ; mvn clean install
 
-.PHONY: rate-limit-test
+.PHONY: go-rate-limit-test
 rate-limit-test:
-	go run utils/rateLimit.go http://localhost:8080 1000
-	go run utils/rateLimit.go http://localhost:8081 1000
+	time go run utils/rateLimit.go http://localhost:8080 48
+	time go run utils/rateLimit.go http://localhost:8081 48
 
 .PHONY: clean
 clean:
