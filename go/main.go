@@ -1,9 +1,7 @@
 package main
 
 import (
-	"fmt"
-	"os"
-	"runtime"
+	"net/http"
 	"strconv"
 )
 
@@ -26,12 +24,12 @@ func worker(requestChan <-chan int, responseChan chan<- int) {
 	}
 }
 
-func fibonacciWorkerPool(threads int, n int) int {
+func fibonacciWorkerPool(n int) int {
 	var ans = 0
 	var requestChan = make(chan int, n)
 	var responseChan = make(chan int, n)
 
-	for i := 1; i <= threads; i++ {
+	for i := 0; i <= n; i++ {
 		go worker(requestChan, responseChan)
 	}
 
@@ -50,10 +48,13 @@ func fibonacciWorkerPool(threads int, n int) int {
 }
 
 func main() {
-	n, err := strconv.Atoi(os.Args[1])
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	fmt.Println("Total:", fibonacciWorkerPool(runtime.NumCPU(), n))
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		n, err := strconv.Atoi(r.FormValue("n"))
+		if err != nil {
+			http.Error(w, "Wrong parameter 'n'", http.StatusBadRequest)
+			return
+		}
+		w.Write([]byte(strconv.Itoa(fibonacciWorkerPool(n))))
+	})
+	http.ListenAndServe(":8080", nil)
 }
