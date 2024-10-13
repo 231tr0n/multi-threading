@@ -1,8 +1,10 @@
 package main
 
 import (
+	"flag"
 	"io"
 	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"runtime"
@@ -14,20 +16,28 @@ import (
 
 var url string
 var requests int
+var debug bool
 
 func init() {
 	log.SetFlags(0)
-	log.SetPrefix("INFO: ")
+	log.SetPrefix("")
 
-	if len(os.Args) != 3 {
-		log.Fatalln("Provide the right arguments in order: website-url, requests")
-	}
+	url = *flag.String("host", "http://localhost:8080", "Host to request")
+	requests = *flag.Int("requests", 48, "Number of requests")
+	debug = *flag.Bool("debug", false, "Set logger level to debug")
+	flag.Parse()
 
-	url = os.Args[1]
-	var err error
-	requests, err = strconv.Atoi(os.Args[2])
+	_, err := http.Get(url + "?n=1")
 	if err != nil {
-		log.Fatalln(err)
+		slog.Error("Host not valid")
+		os.Exit(1)
+	}
+	if requests > 48 && requests >= 0 {
+		slog.Error("Requests should be less than or equal to 48 and greater than or equal to 0")
+		os.Exit(1)
+	}
+	if debug {
+		slog.SetLogLoggerLevel(slog.LevelDebug)
 	}
 }
 
@@ -36,15 +46,15 @@ func worker(wg *sync.WaitGroup, requestsChan <-chan int) {
 		startTime := time.Now()
 		res, err := http.Get(url + "?n=" + strconv.Itoa(n))
 		if err != nil {
-			log.Println("REQ", n, err)
+			slog.Debug("REQ", "n", n, "err", err)
 			continue
 		}
 		body, err := io.ReadAll(res.Body)
 		if err != nil {
-			log.Println("REQ", n, err)
+			slog.Debug("REQ", "n", n, "err", err)
 			continue
 		}
-		log.Println("REQ", n, time.Since(startTime).Round(time.Second), strings.TrimSpace(string(body)))
+		slog.Debug("REQ", "n", n, "time", time.Since(startTime).Round(time.Second), "ans", strings.TrimSpace(string(body)))
 	}
 	wg.Done()
 }
@@ -68,6 +78,6 @@ func main() {
 	duration := int(time.Since(startTime).Round(time.Second).Seconds())
 	if duration > 0 {
 		requestsPerSecond := int(requests / duration)
-		log.Printf("Load test completed in %ds with %d rps\n", duration, requestsPerSecond)
+		slog.Info("Load test completed", "duration", duration, "rps", requestsPerSecond)
 	}
 }
