@@ -8,6 +8,7 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -30,7 +31,7 @@ func init() {
 	}
 }
 
-func worker(requestsChan <-chan int) {
+func worker(wg *sync.WaitGroup, requestsChan <-chan int) {
 	for n := range requestsChan {
 		startTime := time.Now()
 		res, err := http.Get(url + "?n=" + strconv.Itoa(n))
@@ -45,19 +46,24 @@ func worker(requestsChan <-chan int) {
 		}
 		log.Println("REQ", n, time.Since(startTime).Round(time.Second), strings.TrimSpace(string(body)))
 	}
+	wg.Done()
 }
 
 func main() {
 	startTime := time.Now()
 	requestsChan := make(chan int, requests)
+	var wg sync.WaitGroup
 
 	for range runtime.NumCPU() {
-		go worker(requestsChan)
+		wg.Add(1)
+		go worker(&wg, requestsChan)
 	}
 	for i := range requests {
 		requestsChan <- i
 	}
 	close(requestsChan)
+
+	wg.Wait()
 
 	duration := int(time.Since(startTime).Round(time.Second).Seconds())
 	if duration > 0 {
