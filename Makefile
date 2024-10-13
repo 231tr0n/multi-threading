@@ -4,29 +4,22 @@ SHELL=/bin/bash
 docker-build:
 	$(MAKE) clean
 	$(MAKE) build
-	docker rmi -f trial
-	docker build -t trial .
-
-.PHONY: docker-run
-docker-run:
-	$(MAKE) docker-build
-	docker run --rm -p 8080:8080 trial
+	docker rmi -f trial-go
+	docker rmi -f trial-java
+	cd ./go ; docker build -t trial-go .
+	cd ./java ; docker build -t trial-java .
 
 .PHONY: build
 build:
 	$(MAKE) clean
-	go mod tidy
-	GOEXPERIMENT=boringcrypto go build -v -o trial .
+	cd ./go ; go mod tidy ; go build -v .
+	cd ./java ; mvn clean install
 
 .PHONY: rate-limit-test
 rate-limit-test:
-	go run utils/rateLimit.go http://localhost:8080/test 1000 100
-
-.PHONY: run
-run:
-	go mod tidy
-	PORT=:8080 GOEXPERIMENT=boringcrypto go run .
+	go run utils/rateLimit.go http://localhost:8080 1000
 
 .PHONY: clean
 clean:
-	rm -rf ./trial
+	rm -rf ./go/trial
+	cd ./java ; mvn clean

@@ -6,6 +6,6 @@ RUN apk add gcompat
 
 WORKDIR /root/trial
 
-COPY trial .
+COPY fibonacci .
 
-CMD ["./trial"]
+CMD ["./fibonacci"]
