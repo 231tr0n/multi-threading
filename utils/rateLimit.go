@@ -58,7 +58,7 @@ func main() {
 		wg.Add(1)
 		go worker(&wg, requestsChan)
 	}
-	for i := range requests {
+	for i := 0; i <= requests; i++ {
 		requestsChan <- i
 	}
 	close(requestsChan)
