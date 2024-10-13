@@ -5,22 +5,21 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"runtime"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 )
 
 var url string
 var requests int
-var threads int
 
 func init() {
 	log.SetFlags(0)
 	log.SetPrefix("INFO: ")
 
 	if len(os.Args) != 4 {
-		log.Fatalln("Provide the right arguments in order: website-url, requests, threads")
+		log.Fatalln("Provide the right arguments in order: website-url, requests")
 	}
 
 	url = os.Args[1]
@@ -29,16 +28,12 @@ func init() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	threads, err = strconv.Atoi(os.Args[3])
-	if err != nil {
-		log.Fatalln(err)
-	}
 }
 
-func worker(requestsChan <-chan int, wg *sync.WaitGroup) {
+func worker(requestsChan <-chan int) {
 	for id := range requestsChan {
 		startTime := time.Now()
-		res, err := http.Get(url)
+		res, err := http.Get(url + "?n=" + strconv.Itoa(id))
 		if err != nil {
 			log.Println("REQ", id, err)
 			continue
@@ -50,25 +45,19 @@ func worker(requestsChan <-chan int, wg *sync.WaitGroup) {
 		}
 		log.Println("REQ", id, time.Since(startTime).Round(time.Second), strings.TrimSpace(string(body)))
 	}
-	wg.Done()
 }
 
 func main() {
-	var wg sync.WaitGroup
-
 	startTime := time.Now()
 	requestsChan := make(chan int, requests)
 
-	for range threads {
-		wg.Add(1)
-		go worker(requestsChan, &wg)
+	for range runtime.NumCPU() {
+		go worker(requestsChan)
 	}
 	for i := range requests {
 		requestsChan <- i
 	}
 	close(requestsChan)
-
-	wg.Wait()
 
 	duration := int(time.Since(startTime).Round(time.Second).Seconds())
 	if duration > 0 {
