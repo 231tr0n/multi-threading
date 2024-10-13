@@ -1,6 +1,6 @@
 SHELL=/bin/bash
 
-requests=48
+requests=47
 
 .PHONY: docker-build
 docker-build:

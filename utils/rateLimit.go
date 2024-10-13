@@ -54,7 +54,7 @@ func worker(wg *sync.WaitGroup, requestsChan <-chan int) {
 			slog.Debug("Request", "n", n, "err", err)
 			continue
 		}
-		slog.Debug("Request", "n", n, "time", time.Since(startTime).Round(time.Nanosecond), "ans", strings.TrimSpace(string(body)))
+		slog.Debug("Request", "n", n, "time", time.Since(startTime).Round(time.Microsecond), "ans", strings.TrimSpace(string(body)))
 	}
 	wg.Done()
 }
@@ -75,5 +75,5 @@ func main() {
 
 	wg.Wait()
 
-	slog.Info("Completed", "duration", time.Since(startTime).Round(time.Nanosecond))
+	slog.Info("Completed", "duration", time.Since(startTime).Round(time.Microsecond))
 }
