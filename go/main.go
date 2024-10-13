@@ -7,24 +7,24 @@ import (
 
 var question *int
 
-func fibonacci(n int) int {
+func Fibonacci(n int) int {
 	if n == 0 {
 		return 0
 	}
 	if n == 1 {
 		return 1
 	}
-	return fibonacci(n-1) + fibonacci(n-2)
+	return Fibonacci(n-1) + Fibonacci(n-2)
 }
 
 func worker(requestChan <-chan int, responseChan chan<- int) {
 	for n := range requestChan {
-		var ans = fibonacci(n)
+		var ans = Fibonacci(n)
 		responseChan <- ans
 	}
 }
 
-func fibonacciWorkerPool(n int) int {
+func FibonacciWorkerPool(n int) int {
 	var ans = 0
 	var requestChan = make(chan int, n)
 	var responseChan = make(chan int, n)
@@ -54,7 +54,7 @@ func main() {
 			http.Error(w, "Wrong parameter 'n'", http.StatusBadRequest)
 			return
 		}
-		w.Write([]byte(strconv.Itoa(fibonacciWorkerPool(n))))
+		w.Write([]byte(strconv.Itoa(FibonacciWorkerPool(n))))
 	})
 	http.ListenAndServe(":8080", nil)
 }

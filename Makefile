@@ -18,6 +18,7 @@ build:
 .PHONY: rate-limit-test
 rate-limit-test:
 	go run utils/rateLimit.go http://localhost:8080 1000
+	go run utils/rateLimit.go http://localhost:8081 1000
 
 .PHONY: clean
 clean:
