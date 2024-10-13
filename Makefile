@@ -16,7 +16,7 @@ compose-up:
 	docker compose up -d
 
 .PHONY: compose-down
-compose-up:
+compose-down:
 	docker compose down
 
 .PHONY: build
@@ -27,11 +27,11 @@ build:
 
 .PHONY: go-rate-limit-test
 go-rate-limit-test:
-	time go run utils/rateLimit.go http://localhost:8080 $(requests)
+	go run utils/rateLimit.go http://localhost:8080 $(requests)
 
 .PHONY: java-rate-limit-test
 java-rate-limit-test:
-	time go run utils/rateLimit.go http://localhost:8081 $(requests)
+	go run utils/rateLimit.go http://localhost:8081 $(requests)
 
 .PHONY: clean
 clean:
