@@ -1,7 +1,14 @@
+---
 services:
-  trial:
-    image: trial:latest
-    container_name: trial-service
+  trial-go:
+    image: trial-go:latest
+    container_name: trial-go
     pull_policy: never
     ports:
-      - "8080:8080"
+    - "8080:8080"
+  trial-java:
+    image: trial-java:latest
+    container_name: trial-java
+    pull_policy: never
+    ports:
+    - "8081:8081"
