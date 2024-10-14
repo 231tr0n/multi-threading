@@ -12,31 +12,22 @@ var question *int
 func init() {
 	log.SetFlags(0)
 	log.SetPrefix("")
-
-	question = flag.Int("n", 47, "Value to find the answer")
-	debug := flag.Bool("debug", false, "Log level debug")
-	flag.Parse()
-	if *debug {
-		slog.SetLogLoggerLevel(slog.LevelDebug)
-	}
-
-	slog.Info("Parameters", "FACTORIALSUM", *question)
 }
 
-func fibonacci(n int) int {
+func Fibonacci(n int) int {
 	if n == 0 {
 		return 0
 	}
 	if n == 1 {
 		return 1
 	}
-	return fibonacci(n-1) + fibonacci(n-2)
+	return Fibonacci(n-1) + Fibonacci(n-2)
 }
 
 func worker(wg *sync.WaitGroup, id int, requestChan <-chan int, responseChan chan<- int) {
 	slog.Debug("Starting", "worker", id)
 	for n := range requestChan {
-		var ans = fibonacci(n)
+		var ans = Fibonacci(n)
 		slog.Debug("Processed", "worker", id, "n", n, "ans", ans)
 		responseChan <- ans
 	}
@@ -44,7 +35,7 @@ func worker(wg *sync.WaitGroup, id int, requestChan <-chan int, responseChan cha
 	wg.Done()
 }
 
-func fibonacciWorkerPool(n int) int {
+func FibonacciWorkerPool(n int) int {
 	var wg sync.WaitGroup
 	var ans = 0
 	var requestChan = make(chan int, n)
@@ -72,5 +63,13 @@ func fibonacciWorkerPool(n int) int {
 }
 
 func main() {
-	slog.Info("Solution", "ans", fibonacciWorkerPool(*question))
+	question = flag.Int("n", 47, "Value to find the answer")
+	debug := flag.Bool("debug", false, "Log level debug")
+	flag.Parse()
+	if *debug {
+		slog.SetLogLoggerLevel(slog.LevelDebug)
+	}
+
+	slog.Info("Parameters", "FACTORIALSUM", *question)
+	slog.Info("Solution", "ans", FibonacciWorkerPool(*question))
 }
