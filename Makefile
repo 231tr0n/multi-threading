@@ -34,12 +34,12 @@ go-rate-limit-test:
 	go run utils/rateLimit.go -debug -host=http://localhost:8080 -requests=$(requests)
 
 .PHONY: java-platform-rate-limit-test
-java-rate-limit-test:
+java-platform-rate-limit-test:
 	go run utils/rateLimit.go -debug -host=http://localhost:8081 -requests=$(requests)
 
 .PHONY: java-virtual-rate-limit-test
-java-rate-limit-test:
-	go run utils/rateLimit.go -debug -host=http://localhost:8081 -requests=$(requests)
+java-virtual-rate-limit-test:
+	go run utils/rateLimit.go -debug -host=http://localhost:8082 -requests=$(requests)
 
 .PHONY: clean
 clean:
