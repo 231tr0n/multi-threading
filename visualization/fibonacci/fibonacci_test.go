@@ -1,7 +1,8 @@
-package main
+package fibonacci_test
 
 import (
 	"testing"
+	"visualization.io/fibonacci"
 )
 
 func failTestCase(t *testing.T, i, o, w any) {
@@ -39,7 +40,7 @@ func TestFibonacci(t *testing.T) {
 
 	for _, test := range tests {
 		t.Log(test)
-		out := Fibonacci(test[0])
+		out := fibonacci.Fibonacci(test[0])
 
 		if out != test[1] {
 			failTestCase(t, test[0], out, test[1])
