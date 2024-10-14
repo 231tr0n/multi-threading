@@ -4,7 +4,6 @@ import (
 	"flag"
 	"log"
 	"log/slog"
-	"runtime"
 	"sync"
 )
 
@@ -14,14 +13,14 @@ func init() {
 	log.SetFlags(0)
 	log.SetPrefix("")
 
-	question = flag.Int("n", 10, "Value to find the answer")
+	question = flag.Int("n", 47, "Value to find the answer")
 	debug := flag.Bool("debug", false, "Log level debug")
 	flag.Parse()
 	if *debug {
 		slog.SetLogLoggerLevel(slog.LevelDebug)
 	}
 
-	slog.Info("Parameters", "GOMAXPROCS", runtime.GOMAXPROCS(0), "CPU", runtime.NumCPU(), "FACTORIALSUM", *question)
+	slog.Info("Parameters", "FACTORIALSUM", *question)
 }
 
 func fibonacci(n int) int {
@@ -45,13 +44,13 @@ func worker(wg *sync.WaitGroup, id int, requestChan <-chan int, responseChan cha
 	wg.Done()
 }
 
-func fibonacciWorkerPool(threads int, n int) int {
+func fibonacciWorkerPool(n int) int {
 	var wg sync.WaitGroup
 	var ans = 0
 	var requestChan = make(chan int, n)
 	var responseChan = make(chan int, n)
 
-	for i := 1; i <= threads; i++ {
+	for i := 1; i <= n; i++ {
 		wg.Add(1)
 		go worker(&wg, i, requestChan, responseChan)
 	}
@@ -73,5 +72,5 @@ func fibonacciWorkerPool(threads int, n int) int {
 }
 
 func main() {
-	slog.Info("Solution", "ans", fibonacciWorkerPool(runtime.NumCPU(), *question))
+	slog.Info("Solution", "ans", fibonacciWorkerPool(*question))
 }
