@@ -17,18 +17,9 @@ class App {
       workers.add(new Worker(i));
     }
 
-    final List<Thread> threads = new ArrayList<Thread>();
     for (final Worker worker : workers) {
-      threads.add(new Thread(worker));
-    }
-
-    for (final Thread thread : threads) {
-      thread.start();
-    }
-
-    for (final Thread thread : threads) {
       try {
-        thread.join();
+        Thread.ofPlatform().start(worker).join();
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
@@ -42,7 +33,7 @@ class App {
   }
 
   public static void main(String[] args) throws IOException {
-    HttpServer server = HttpServer.create(new InetSocketAddress(8081), 0);
+    HttpServer server = HttpServer.create(new InetSocketAddress(8082), 0);
     server.createContext(
         "/",
         exchange -> {

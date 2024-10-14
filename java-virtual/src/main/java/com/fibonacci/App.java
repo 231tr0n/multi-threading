@@ -17,18 +17,9 @@ class App {
       workers.add(new Worker(i));
     }
 
-    final List<Thread> threads = new ArrayList<Thread>();
     for (final Worker worker : workers) {
-      threads.add(new Thread(worker));
-    }
-
-    for (final Thread thread : threads) {
-      thread.start();
-    }
-
-    for (final Thread thread : threads) {
       try {
-        thread.join();
+        Thread.ofVirtual().start(worker).join();
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
