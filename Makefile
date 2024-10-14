@@ -38,6 +38,10 @@ java-platform-rate-limit-test:
 java-virtual-rate-limit-test:
 	go run utils/rateLimit.go -debug -host=http://localhost:8082 -requests=$(requests)
 
+.PHONY: pkgsite
+pkgsite:
+	cd ./visualization ; go run golang.org/x/pkgsite/cmd/pkgsite@latest
+
 .PHONY: clean
 clean:
 	rm -rf ./visualization/visualization.io

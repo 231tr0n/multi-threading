@@ -6,7 +6,7 @@ import (
 	"visualization.io/fibonacci"
 )
 
-func Example() {
+func ExampleFibonacci() {
 	fmt.Println(fibonacci.Fibonacci(5))
 	// Output: 5
 }
