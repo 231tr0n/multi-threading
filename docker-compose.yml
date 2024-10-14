@@ -6,9 +6,15 @@ services:
     pull_policy: never
     ports:
     - "8080:8080"
-  trial-java:
-    image: trial-java:latest
-    container_name: trial-java
+  trial-java-platform:
+    image: trial-java-platform:latest
+    container_name: trial-java-platform
     pull_policy: never
     ports:
     - "8081:8081"
+  trial-java-virtual:
+    image: trial-java-virtual:latest
+    container_name: trial-java-virtual
+    pull_policy: never
+    ports:
+    - "8082:8082"
