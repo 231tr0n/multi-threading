@@ -43,6 +43,9 @@ java-virtual-rate-limit-test:
 
 .PHONY: clean
 clean:
+	docker rmi -f trial-go
+	docker rmi -f trial-java-platform
+	docker rmi -f trial-java-virtual
 	rm -rf ./visualization/visualization.io
 	rm -rf ./go/trial
 	cd ./java-platform ; mvn clean
