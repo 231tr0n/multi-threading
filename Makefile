@@ -1,6 +1,6 @@
 SHELL=/bin/bash
 
-requests=47
+requests=43
 
 .PHONY: docker-build
 docker-build:
@@ -23,6 +23,7 @@ compose-down:
 build:
 	$(MAKE) clean
 	cd ./go ; go mod tidy ; go build -v .
+	cd ./visualization ; go mod tidy ; go build -v .
 	cd ./java ; mvn clean install
 
 .PHONY: go-rate-limit-test
@@ -36,4 +37,5 @@ java-rate-limit-test:
 .PHONY: clean
 clean:
 	rm -rf ./go/trial
+	rm -rf ./visualization/visualization.io
 	cd ./java ; mvn clean
