@@ -1,4 +1,4 @@
-# concurrency
+# Multi-threading
 Source code to test multi threading in go and java.
 
 ## Running the project
