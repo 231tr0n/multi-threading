@@ -6,9 +6,6 @@ requests=45
 docker-build:
 	$(MAKE) clean
 	$(MAKE) build
-	docker rmi -f trial-go
-	docker rmi -f trial-java-platform
-	docker rmi -f trial-java-virtual
 	cd ./go ; docker build -t trial-go .
 	cd ./java-platform ; docker build -t trial-java-platform .
 	cd ./java-virtual ; docker build -t trial-java-virtual .
@@ -43,9 +40,6 @@ java-virtual-rate-limit-test:
 
 .PHONY: clean
 clean:
-	docker rmi -f trial-go
-	docker rmi -f trial-java-platform
-	docker rmi -f trial-java-virtual
 	rm -rf ./visualization/visualization.io
 	rm -rf ./go/trial
 	cd ./java-platform ; mvn clean
