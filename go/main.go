@@ -17,15 +17,15 @@ func Fibonacci(n int) int {
 
 func worker(requestChan <-chan int, responseChan chan<- int) {
 	for n := range requestChan {
-		var ans = Fibonacci(n)
+		ans := Fibonacci(n)
 		responseChan <- ans
 	}
 }
 
 func FibonacciWorkerPool(n int) int {
-	var ans = 0
-	var requestChan = make(chan int, n)
-	var responseChan = make(chan int, n)
+	ans := 0
+	requestChan := make(chan int, n)
+	responseChan := make(chan int, n)
 
 	for i := 0; i <= n; i++ {
 		go worker(requestChan, responseChan)
@@ -37,7 +37,7 @@ func FibonacciWorkerPool(n int) int {
 	close(requestChan)
 
 	for i := 0; i <= n; i++ {
-		var n = <-responseChan
+		n := <-responseChan
 		ans += n
 	}
 	close(responseChan)

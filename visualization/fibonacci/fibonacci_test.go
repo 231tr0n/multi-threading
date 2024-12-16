@@ -2,6 +2,7 @@ package fibonacci_test
 
 import (
 	"testing"
+
 	"visualization.io/fibonacci"
 )
 

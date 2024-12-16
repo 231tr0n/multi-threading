@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log"
 	"log/slog"
+
 	"visualization.io/fibonacci"
 )
 

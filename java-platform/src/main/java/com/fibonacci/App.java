@@ -8,6 +8,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 class App {
   public static long compute(int n) {
@@ -17,13 +19,12 @@ class App {
       workers.add(new Worker(i));
     }
 
+    ExecutorService threadPool = Executors.newCachedThreadPool(Thread.ofPlatform().factory());
     for (final Worker worker : workers) {
-      try {
-        Thread.ofPlatform().start(worker).join();
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
+      threadPool.execute(worker);
     }
+    threadPool.shutdown();
+    while (!threadPool.isTerminated()) {}
 
     long total = 0;
     for (final Worker worker : workers) {

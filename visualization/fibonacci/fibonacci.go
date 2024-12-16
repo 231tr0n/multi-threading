@@ -19,7 +19,7 @@ func Fibonacci(n int) int {
 func worker(wg *sync.WaitGroup, id int, requestChan <-chan int, responseChan chan<- int) {
 	slog.Debug("Starting", "worker", id)
 	for n := range requestChan {
-		var ans = Fibonacci(n)
+		ans := Fibonacci(n)
 		slog.Debug("Processed", "worker", id, "n", n, "ans", ans)
 		responseChan <- ans
 	}
@@ -30,9 +30,9 @@ func worker(wg *sync.WaitGroup, id int, requestChan <-chan int, responseChan cha
 // FibonacciWorkerPool is used to sum up all the fibonacci numbers till the given number starting from 0.
 func FibonacciWorkerPool(n int) int {
 	var wg sync.WaitGroup
-	var ans = 0
-	var requestChan = make(chan int, n)
-	var responseChan = make(chan int, n)
+	ans := 0
+	requestChan := make(chan int, n)
+	responseChan := make(chan int, n)
 
 	for i := 1; i <= n; i++ {
 		wg.Add(1)
@@ -45,7 +45,7 @@ func FibonacciWorkerPool(n int) int {
 	close(requestChan)
 
 	for i := 0; i <= n; i++ {
-		var n = <-responseChan
+		n := <-responseChan
 		ans += n
 	}
 	close(responseChan)
