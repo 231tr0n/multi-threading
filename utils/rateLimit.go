@@ -14,16 +14,18 @@ import (
 	"time"
 )
 
-var url *string
-var requests *int
-var debug *bool
+var (
+	url      *string
+	requests *int
+	debug    *bool
+)
 
 func init() {
 	log.SetFlags(0)
 	log.SetPrefix("")
 
 	url = flag.String("host", "", "Host to request")
-	requests = flag.Int("requests", 47, "Number of requests")
+	requests = flag.Int("requests", 45, "Number of requests")
 	debug = flag.Bool("debug", false, "Set logger level to debug")
 	flag.Parse()
 
@@ -32,7 +34,7 @@ func init() {
 		slog.Error("Host not valid")
 		os.Exit(1)
 	}
-	if *requests > 48 && *requests >= 0 {
+	if *requests < 0 {
 		slog.Error("Requests should be less than or equal to 48 and greater than or equal to 0")
 		os.Exit(1)
 	}
@@ -54,7 +56,15 @@ func worker(wg *sync.WaitGroup, requestsChan <-chan int) {
 			slog.Debug("Request", "n", n, "err", err)
 			continue
 		}
-		slog.Debug("Request", "n", n, "time", time.Since(startTime).Round(time.Microsecond), "ans", strings.TrimSpace(string(body)))
+		slog.Debug(
+			"Request",
+			"n",
+			n,
+			"time",
+			time.Since(startTime).Round(time.Microsecond),
+			"ans",
+			strings.TrimSpace(string(body)),
+		)
 	}
 	wg.Done()
 }

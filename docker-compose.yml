@@ -18,3 +18,9 @@ services:
     pull_policy: never
     ports:
     - "8082:8082"
+  trial-java-dropwizard:
+    image: trial-java-dropwizard:latest
+    container_name: trial-java-dropwizard
+    pull_policy: never
+    ports:
+    - "8083:8083"
